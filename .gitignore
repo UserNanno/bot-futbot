@@ -5,15 +5,13 @@ env/
 ENV/
 
 # --- Archivos de Rasa generados automáticamente ---
-results/
-*.db
-*.sqlite3
+
 
 # --- Cachés y artefactos ---
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
+*.pyd   
 *.log
 *.tmp
 *.temp
@@ -24,9 +22,6 @@ __pycache__/
 *.pkl
 
 # --- Configuración temporal de Rasa ---
-rasa/cache/
-rasa/core/cache/
-rasa/train/cache/
 
 # --- Archivos de sistema ---
 .DS_Store
