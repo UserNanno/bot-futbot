@@ -5,7 +5,6 @@ env/
 ENV/
 
 # --- Archivos de Rasa generados automáticamente ---
-models/
 results/
 *.db
 *.sqlite3
