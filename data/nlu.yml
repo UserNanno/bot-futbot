@@ -4,42 +4,87 @@ nlu:
   examples: |
     - hola
     - buenas
-    - qué tal
+    - que tal
+    - holaaa
+    - buenos dias
+    - buenas tardes
+    - buenas noches
 
 - intent: consultar_disponibilidad
   examples: |
+    # con fecha y hora
+    - esta libre la canchita para las [9 am](hora) del [2 de noviembre](fecha)
     - hay canchita el [02/11/2025](fecha) a las [4 pm](hora)
-    - está libre el [02/11/2025](fecha) [8:00 pm](hora)
+    - esta libre el [02/11/2025](fecha) [8pm](hora)
     - disponibilidad para el [25/12/2025](fecha) [9 pm](hora)
-    - puedo separar el [sábado](fecha) a las [8 pm](hora)
-    - hay cancha [mañana](fecha) a las [7:30 pm](hora)
+    - hay cancha el [2 nov](fecha) [7:30 pm](hora)
+    - esta libre el [2-11-2025](fecha) [20:00](hora)
+    - se puede el [domingo](fecha) a las [7 pm](hora)
+    - puedo separar el [sabado](fecha) a las [8 pm](hora)
+
+    # SOLO hora → queremos que el bot asuma "hoy"
+    - esta libre a las [8 pm](hora)
+    - hay cancha [7pm](hora)
+    - disponible [21:00](hora)
+    - como a las [6 pm](hora)
+    - a [5 pm](hora) hay?
+
+    # SOLO fecha → bot pedirá la hora
+    - esta libre el [2 de noviembre](fecha)
+    - hay cancha [mañana](fecha)
+    - para el [viernes](fecha) hay?
+
+    # relativas y sin signos/puntuacion
+    - hay canchita hoy a las [8 pm](hora)
+    - hoy [7 pm](hora) esta libre
+    - mañana [9 am](hora)
+    - pasado [8pm](hora)
+    - este [viernes](fecha) [9 pm](hora)
+    - proximo [domingo](fecha) [10 am](hora)
+
+- intent: reservar_cancha
+  examples: |
+    # completo
+    - reservar para el [02/11/2025](fecha) a las [4 pm](hora) para mi usuario [3](usuario_id)
+    - separar el [26/10/2025](fecha) [7:30 pm](hora) con usuario [2](usuario_id)
+    - reserva el [30/10/2025](fecha) [8 pm](hora) para mi usuario [1](usuario_id)
+
+    # naturales/relativos
+    - quiero reservar a las [5 pm](hora)
+    - reserva hoy a las [7 pm](hora)
+    - separar mañana [9 am](hora)
+    - aparta para el [2 de nov](fecha) [8pm](hora)
 
 - intent: cancelar_reserva
   examples: |
     - cancelar la reserva [123](reserva_id)
     - anula mi reserva [15](reserva_id)
-
-- intent: reservar_cancha
-  examples: |
-    - reservar para el [02/11/2025](fecha) a las [4 pm](hora) para mi usuario [3](usuario_id)
-    - quiero reservar el [26/10/2025](fecha) a las [7:30 pm](hora) con usuario [2](usuario_id)
-    - reserva el [30/10/2025](fecha) [8 pm](hora) para mi usuario [1](usuario_id)
+    - elimina la reserva [9](reserva_id)
 
 - intent: affirm
   examples: |
-    - sí
     - si
-    - claro
+    - sí
+    - dale
+    - ya
     - ok
     - de una
+    - claro
     - afirmativo
     - correcto
-    - dale
 
 - regex: fecha
   examples: |
-    - \b([0-3]?\d/[0-1]?\d/\d{4})\b
+    # dd/mm/yyyy, dd-mm-yyyy, dd/mm/yy
+    - \b([0-3]?\d[/-][0-1]?\d([/-]\d{2,4})?)\b
+    # 2 de nov, 02 nov, 2 nov 2025
+    - \b([0-3]?\d\s*(de)?\s*[a-zA-Záéíóúñ]{3,9}(\s*\d{4})?)\b
+    # palabras relativas (hoy, mañana, pasado, sábado, domingo, etc.)
+    - \b(hoy|mañana|pasado|este\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo)|proximo\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo))\b
 
 - regex: hora
   examples: |
-    - \b([0-1]?\d|2[0-3]):[0-5]\d(\s?(am|pm))?\b
+    # 8pm, 8 pm, 08:00 pm, 20:00
+    - \b([0-2]?\d)(?::([0-5]\d))?\s?(am|pm)\b
+    - \b([0-1]?\d|2[0-3]):[0-5]\d\b
+    - \b([0-1]?\d|2[0-3])\s?(am|pm)\b

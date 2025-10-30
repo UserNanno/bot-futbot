@@ -1,16 +1,29 @@
 import os, re, requests
 from typing import Text, Any, Dict, List
+from datetime import datetime
 import dateparser
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet
 from rasa_sdk.forms import FormValidationAction
 from dotenv import load_dotenv
+
+# Cargar .env si existe
 load_dotenv()
 
 API_BASE = os.getenv("FUTBOT_API_BASE", "http://localhost:3000/api")
 TZ = "America/Lima"
-REQ_TIMEOUT = 10  # segundos
+REQ_TIMEOUT = 10
+
+try:
+    from zoneinfo import ZoneInfo
+    LIMA_TZ = ZoneInfo(TZ)
+except Exception:
+    try:
+        from pytz import timezone as _tz
+        LIMA_TZ = _tz(TZ)
+    except Exception:
+        LIMA_TZ = None
 
 def _date_ddmmyyyy(text: str) -> str:
     if not text:
@@ -32,6 +45,11 @@ def _time_hmma(text: str) -> str:
     except Exception:
         return dt.strftime("%I:%M %p").lstrip("0").lower() if dt else ""
 
+def _hoy_ddmmyyyy() -> str:
+    if LIMA_TZ:
+        return datetime.now(LIMA_TZ).strftime("%d/%m/%Y")
+    return datetime.now().strftime("%d/%m/%Y")
+
 class ActionSetUsuarioFromSender(Action):
     """Setea el slot usuario_id desde metadata o sender_id (p.ej. 'user-123')."""
 
@@ -41,14 +59,14 @@ class ActionSetUsuarioFromSender(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict):
         uid = None
 
-        # metadata del canal REST
+        # 1) metadata del canal REST ( rest: store_metadata: true)
         try:
             meta = tracker.latest_message.metadata or {}
             uid = meta.get("usuarioId") or meta.get("user_id")
         except Exception:
             uid = None
 
-        # sender_id terminado (user-123, 123, u_45)
+        # 2) extraer del sender_id terminando en dígitos (user-123, 123, u_45)
         if not uid and tracker.sender_id:
             m = re.search(r"(\d+)$", str(tracker.sender_id))
             if m:
@@ -63,6 +81,10 @@ class ValidateConsultaForm(FormValidationAction):
         return "validate_consulta_form"
 
     def validate_fecha(self, value, dispatcher, tracker, domain):
+        # Si NO hay fecha pero SÍ hay hora → asumir HOY (America/Lima)
+        if (not value) and tracker.get_slot("hora"):
+            return {"fecha": _hoy_ddmmyyyy()}
+
         p = _date_ddmmyyyy(value)
         if p:
             return {"fecha": p}
@@ -72,6 +94,9 @@ class ValidateConsultaForm(FormValidationAction):
     def validate_hora(self, value, dispatcher, tracker, domain):
         p = _time_hmma(value)
         if p:
+            # Si hora OK y no hay fecha aún → también fijamos HOY acá
+            if not tracker.get_slot("fecha"):
+                return {"hora": p, "fecha": _hoy_ddmmyyyy()}
             return {"hora": p}
         dispatcher.utter_message(text="Hora ej. 8:00 pm")
         return {"hora": None}
@@ -88,6 +113,9 @@ class ValidateReservaForm(FormValidationAction):
             return {"usuario_id": None}
 
     def validate_fecha(self, value, dispatcher, tracker, domain):
+        # Para reservas directas: si solo te dan hora, asume HOY
+        if (not value) and tracker.get_slot("hora"):
+            return {"fecha": _hoy_ddmmyyyy()}
         p = _date_ddmmyyyy(value)
         if p:
             return {"fecha": p}
@@ -97,6 +125,8 @@ class ValidateReservaForm(FormValidationAction):
     def validate_hora(self, value, dispatcher, tracker, domain):
         p = _time_hmma(value)
         if p:
+            if not tracker.get_slot("fecha"):
+                return {"hora": p, "fecha": _hoy_ddmmyyyy()}
             return {"hora": p}
         dispatcher.utter_message(text="Hora ej. 8:00 pm")
         return {"hora": None}
@@ -128,7 +158,7 @@ class ActionConsultarDisponibilidad(Action):
                     dispatcher.utter_message(
                         text=f"{data.get('mensaje', 'Horario disponible')} para {fecha} a las {hora}. ¿Deseas reservar?"
                     )
-                    # fecha/hora para el "sí" posterior -- intent affirm
+                    # Guardar fecha/hora para el “sí”
                     return [SlotSet("fecha", fecha), SlotSet("hora", hora)]
                 else:
                     dispatcher.utter_message(
@@ -183,10 +213,10 @@ class ActionCrearReserva(Action):
                 mensaje = data.get("mensaje", f"Error {r.status_code}")
             except Exception:
                 mensaje = f"Error {r.status_code} del servidor"
-            dispatcher.utter_message(text=f"{mensaje}")
+            dispatcher.utter_message(text=f"❌ {mensaje}")
             return []
 
         except Exception as e:
             print("Error en action_crear_reserva:", e)
-            dispatcher.utter_message(text="No pude crear la reserva. Puede que ese horario ya no esté libre")
+            dispatcher.utter_message(text="❌ No pude crear la reserva. Puede que ese horario ya no esté libre.")
             return []
