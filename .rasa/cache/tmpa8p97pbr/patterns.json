@@ -1,0 +1,26 @@
+[
+  {
+    "name": "fecha",
+    "pattern": "\\b([0-3]?\\d[/-][0-1]?\\d([/-]\\d{2,4})?)\\b"
+  },
+  {
+    "name": "fecha",
+    "pattern": "\\b([0-3]?\\d\\s*(de)?\\s*[a-zA-Záéíóúñ]{3,9}(\\s*\\d{4})?)\\b"
+  },
+  {
+    "name": "fecha",
+    "pattern": "\\b(hoy|mañana|pasado|este\\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo)|proximo\\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo))\\b"
+  },
+  {
+    "name": "hora",
+    "pattern": "\\b([0-1]?\\d|2[0-3]):[0-5]\\d\\b"
+  },
+  {
+    "name": "hora",
+    "pattern": "\\b([0-1]?\\d|2[0-3])\\s?(am|pm)\\b"
+  },
+  {
+    "name": "hora",
+    "pattern": "\\b([0-2]?\\d)(?::([0-5]\\d))?\\s?(am|pm)\\b"
+  }
+]
