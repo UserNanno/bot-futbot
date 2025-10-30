@@ -32,3 +32,9 @@ rasa run actions --port 5055
 
 # 7. Terminal (2)
 rasa run --enable-api --cors "*" --model models/futbot.tar.gz
+
+# ubuntu-terminal
+source venv/bin/activate
+sudo systemctl restart rasa-server
+sudo systemctl status rasa-server --no-pager
+tail -n 50 /var/log/rasa-server.log
