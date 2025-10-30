@@ -6,6 +6,9 @@
 git clone https://github.com/tuusuario/bot-futbot.git
 cd bot-futbot
 
+# 1.1
+py -3.10 -m venv venv
+
 # 2.
 python -m venv venv
 
