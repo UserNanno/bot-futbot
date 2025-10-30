@@ -1,0 +1,66 @@
+version: "3.1"
+intents:
+  - saludo
+  - consultar_disponibilidad
+  - reservar_cancha
+  - cancelar_reserva
+  - nlu_fallback
+  - affirm
+
+entities:
+  - fecha
+  - hora
+  - usuario_id
+  - reserva_id
+
+slots:
+  usuario_id:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: usuario_id
+  fecha:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: fecha
+  hora:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: hora
+  reserva_id:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: reserva_id
+
+forms:
+  consulta_form:
+    required_slots: [fecha, hora]
+  reserva_form:
+    required_slots: [fecha, hora]
+
+responses:
+  utter_saludo:
+    - text: "¡Hola! Puedo consultar disponibilidad y reservar. Dime fecha y hora (ej. sábado 25/10 8 pm)."
+
+  utter_ask_fecha:
+    - text: "¿Para qué fecha? (25/10/2025, 'hoy', 'sábado 25/10')"
+
+  utter_ask_hora:
+    - text: "¿A qué hora? (8:00 pm)"
+
+  utter_ask_usuario_id:
+    - text: "¿Cuál es tu usuario_id?"
+
+  utter_default:
+    - text: "No entendí bien. ¿Puedes reformular? Ej.: '¿hay canchita el 02/11/2025 a las 8 pm?'"
+
+actions:
+  - action_consultar_disponibilidad
+  - action_crear_reserva
+  - validate_consulta_form
+  - validate_reserva_form
+  - action_set_usuario_from_sender

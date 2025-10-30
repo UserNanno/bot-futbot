@@ -1,0 +1,45 @@
+version: "3.1"
+nlu:
+- intent: saludo
+  examples: |
+    - hola
+    - buenas
+    - qué tal
+
+- intent: consultar_disponibilidad
+  examples: |
+    - hay canchita el [02/11/2025](fecha) a las [4 pm](hora)
+    - está libre el [02/11/2025](fecha) [8:00 pm](hora)
+    - disponibilidad para el [25/12/2025](fecha) [9 pm](hora)
+    - puedo separar el [sábado](fecha) a las [8 pm](hora)
+    - hay cancha [mañana](fecha) a las [7:30 pm](hora)
+
+- intent: cancelar_reserva
+  examples: |
+    - cancelar la reserva [123](reserva_id)
+    - anula mi reserva [15](reserva_id)
+
+- intent: reservar_cancha
+  examples: |
+    - reservar para el [02/11/2025](fecha) a las [4 pm](hora) para mi usuario [3](usuario_id)
+    - quiero reservar el [26/10/2025](fecha) a las [7:30 pm](hora) con usuario [2](usuario_id)
+    - reserva el [30/10/2025](fecha) [8 pm](hora) para mi usuario [1](usuario_id)
+
+- intent: affirm
+  examples: |
+    - sí
+    - si
+    - claro
+    - ok
+    - de una
+    - afirmativo
+    - correcto
+    - dale
+
+- regex: fecha
+  examples: |
+    - \b([0-3]?\d/[0-1]?\d/\d{4})\b
+
+- regex: hora
+  examples: |
+    - \b([0-1]?\d|2[0-3]):[0-5]\d(\s?(am|pm))?\b

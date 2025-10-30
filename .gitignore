@@ -1,0 +1,61 @@
+# --- Entorno virtual ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Archivos de Rasa generados automáticamente ---
+models/
+results/
+*.db
+*.sqlite3
+
+# --- Cachés y artefactos ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.tmp
+*.temp
+*.cache
+*.npy
+*.npz
+*.h5
+*.pkl
+
+# --- Configuración temporal de Rasa ---
+rasa/cache/
+rasa/core/cache/
+rasa/train/cache/
+
+# --- Archivos de sistema ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Archivos de dependencias compiladas ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Entornos y dependencias ---
+pip-wheel-metadata/
+site-packages/
+
+# --- Configuración de TensorFlow / ML ---
+.checkpoints/
+.tensorflow/
+.tflogs/
+
+# --- Archivos locales o personales ---
+secrets.env
+.env
+.env.local
+.env.*.local

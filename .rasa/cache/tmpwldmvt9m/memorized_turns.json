@@ -1,0 +1,11 @@
+{
+  "lookup": {
+    "eJyLrq6NBQAEOAGx": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEqhKBXIL0ssik9OzEvOSKytjQUAEvwflQ==": "reserva_form",
+    "eJyFzcEJgDAMBdBVMoATdBWREErEgqYlrb2U7m6KnjzoLR9e/p9bn6Al5YrkS4jioN0HCh3s4Al7yIXF7JlZzQSxWBwoW66k6En8Rn20jZfKuMeYTN41j8M16mHmY/Al//aWCzTISlE=": "action_crear_reserva",
+    "eJy1jUEKgCAQRa/iATqBV4kYBplIsDEmcyPevRFdtYg27f6D9/+fS51MOYQyoEs+sjWlB2DcyZoBwZ+JWN3rJFHHs2KyRkg5o4BDdhvWttYqmSDEeKjZZ4YHa5RdnZfDh/n73wAnpKuj9uF3uQHEwXhD": "action_listen",
+    "eJwtysEJwCAMRuFVMkAncJVSJNUcfrBRTNqLuHuF9vY+ePuYG43W5YmcHFUDjS+i8iWBfhSYi673NunrgS56oFTV7uLcY4a1qjhRkDnPebxDdSNn": "consulta_form",
+    "eJyNjUEKgDAMBL/SB/iCfkUkVBshUJPS1l5K/25EvXgQb7swszu2PpgWE1ZwSyFha9oVgN2G1twlUC7Iyu4ZkzLEWos1i3DeQ3EJPOUoTDMF8s73c/Z0K0IQiapce48Aq6RNoY/rN/r7ejoAkUBS1w==": "action_consultar_disponibilidad",
+    "eJy9jkEKgDAMBL/SB/iCfkUkVBshUJPSVi/FvxtRL4KCF29ZmNlNW9fG1JhwATcUEramHgewm9CaMwTKBVnZOWNShlhjsWYQznMoLoGnHIWpp0De+XWv3d0FIYhEVY6+S4BR0qTQy/Qd/XH6DI8TH57pNigXiaE=": "action_listen"
+  }
+}

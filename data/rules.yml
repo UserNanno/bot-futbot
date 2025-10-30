@@ -1,0 +1,44 @@
+version: "3.1"
+rules:
+- rule: Saludo
+  steps:
+    - intent: saludo
+    - action: utter_saludo
+
+- rule: init session y set usuario
+  steps:
+    - action: action_session_start
+    - action: action_set_usuario_from_sender
+
+- rule: Consulta disponibilidad
+  steps:
+    - intent: consultar_disponibilidad
+    - action: consulta_form
+    - active_loop: consulta_form
+
+- rule: Submit consulta
+  condition:
+    - active_loop: consulta_form
+  steps:
+    - action: consulta_form
+    - active_loop: null
+    - action: action_consultar_disponibilidad
+
+- rule: Reservar
+  steps:
+    - intent: reservar_cancha
+    - action: reserva_form
+    - active_loop: reserva_form
+
+- rule: Submit reserva
+  condition:
+    - active_loop: reserva_form
+  steps:
+    - action: reserva_form
+    - active_loop: null
+    - action: action_crear_reserva
+
+- rule: confirmar reserva después de disponibilidad
+  steps:
+    - intent: affirm
+    - action: action_crear_reserva
